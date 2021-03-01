@@ -12,7 +12,6 @@ int main(void)
   MX_USART2_UART_Init();
 
 
-
   while (1)
   {
 	  a = GetVersion();
