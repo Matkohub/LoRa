@@ -1,16 +1,21 @@
 #include "LoRa.h"
 #include "Init.h"
 
-char *response;
+char response[50];
+
+int bsz;
 
 char* Send(char *buffer)
 {
-	for(uint8_t i = 0; i < strlen(buffer); i++)
-		HAL_UART_Transmit(&huart2, &buffer[i], 1, HAL_MAX_DELAY);
-
 //	HAL_UART_Transmit(&huart2, buffer, strlen(buffer), HAL_MAX_DELAY);
 
-	HAL_UART_Receive(&huart2, response, strlen(response), HAL_MAX_DELAY);
+	HAL_UART_Receive(&huart2, response, 10, HAL_MAX_DELAY);
+
+	HAL_UART_Transmit(&huart2, response, strlen(response), HAL_MAX_DELAY);
+	for(int i = 0; i<50; i++)
+		response[i]=0;
+
+	HAL_Delay(1000);
 	return response;
 }
 
