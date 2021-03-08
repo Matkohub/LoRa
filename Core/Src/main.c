@@ -1,11 +1,9 @@
 #include "main.h"
 
-int tim;
-char *rec;
-char a = 0, b, c;
 uint8_t rx_index = 0;
 uint8_t rx_data;
 uint8_t rx_buffer[50];
+uint8_t message = 0;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -15,12 +13,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 	if(huart->Instance == USART2)
 	{
+		if(rx_data == 10)
+			message = 1;
+
 		if((rx_data != 13) && (rx_data != 10) )
 			rx_buffer[rx_index++] = rx_data;
 		else
 		{
-			HAL_UART_Transmit(&huart2, rx_buffer, strlen(rx_buffer), HAL_MAX_DELAY);
 			rx_index = 0;
+
+			HAL_UART_Transmit(&huart1, rx_buffer, strlen(rx_buffer), HAL_MAX_DELAY);
+			HAL_UART_Transmit(&huart1, "\r\n", strlen("\r\n"), HAL_MAX_DELAY);
 		}
 	}
 
@@ -32,18 +35,54 @@ int main(void)
   HAL_Init();
   SystemClock_Config();
   MX_GPIO_Init();
-  MX_DMA_Init();
+  MX_USART1_UART_Init();
   MX_USART2_UART_Init();
 
-//  __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
   HAL_UART_Receive_IT(&huart2, &rx_data, 1);
+
+  GetVersion();
+  while(message!=1);
+  message = 0;
+
+//  SetAppkey();
+//  while(message!=1);
+//  message = 0;
+//
+//  SetDeveui();
+//  while(message!=1);
+//  message = 0;
+//
+//  SetAppeui();
+//  while(message!=1);
+//  message = 0;
+//
+//  SetDevaddr();
+//  while(message!=1);
+//  message = 0;
+//
+//  SetNwkskey();
+//  while(message!=1);
+//  message = 0;
+//
+//  SetAppskey();
+//  while(message!=1);
+//  message = 0;
+
+  JoinAbp();
+  while(message!=1);
+  message = 0;
+
+  HAL_Delay(100);
+
+  Tx("uncnf", "1", "5D");
+  while(message!=1);
+  message = 0;
 
   while (1)
   {
-//	  GetVersion();
 
 
-	  HAL_Delay(1000);
+	  HAL_Delay(3000);
   }
 }
 

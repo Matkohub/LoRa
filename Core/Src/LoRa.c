@@ -3,28 +3,11 @@
 
 char response[50];
 
-int bsz;
-
 char* Send(char *buffer)
 {
-//	HAL_UART_Transmit(&huart2, buffer, strlen(buffer), HAL_MAX_DELAY);
-
-	HAL_UART_Receive(&huart2, response, 10, HAL_MAX_DELAY);
-
-	HAL_UART_Transmit(&huart2, response, strlen(response), HAL_MAX_DELAY);
-	for(int i = 0; i<50; i++)
-		response[i]=0;
-
-	HAL_Delay(1000);
+	HAL_UART_Transmit(&huart2, buffer, strlen(buffer), HAL_MAX_DELAY);
 	return response;
 }
-
-//char* Receive()
-//{
-//	char *buffer;//velièina buffera?
-//	HAL_UART_Receive(&huart2, buffer, sizeof(buffer), HAL_MAX_DELAY);
-//	return buffer;
-//}
 
 //Set OTAA keys
 
@@ -37,7 +20,7 @@ char* Send(char *buffer)
 
 char*	SetAppkey		()
 {
-	return Send(appkey);
+	return Send(SET_APPKEY);
 }
 //char*	SetAppkey		(uint64_t key1, uint64_t key2)
 //{
@@ -55,7 +38,7 @@ char*	SetAppkey		()
 
 char*	SetDeveui		()
 {
-	return Send(deveui);
+	return Send(SET_DEVEUI);
 }
 //char*	SetDeveui		(uint64_t key)
 //{
@@ -71,7 +54,7 @@ char*	SetDeveui		()
 
 char*	SetAppeui		()
 {
-	return Send(appeui);
+	return Send(SET_APPEUI);
 }
 //char*	SetAppeui		(uint64_t key)
 //{
@@ -90,7 +73,7 @@ char*	SetAppeui		()
 
 char*	SetDevaddr		()
 {
-	return Send(devaddr);
+	return Send(SET_DEVADDR);
 }
 //char*	SetDevaddr		(uint32_t key)
 //{
@@ -104,7 +87,7 @@ char*	SetDevaddr		()
 
 char*	SetNwkskey		()
 {
-	return Send(nwkskey);
+	return Send(SET_NWKSKEY);
 }
 //char*	SetNwkskey		(uint64_t key1, uint64_t key2)
 //{
@@ -119,7 +102,7 @@ char*	SetNwkskey		()
 
 char*	SetAppskey		()
 {
-	return Send(appskey);
+	return Send(SET_APPSKEY);
 }
 //char*	SetAppskey		(uint64_t key1, uint64_t key2)
 //{
@@ -294,15 +277,31 @@ char*	ResetFreq433	()
 //Example: mac tx cnf 4 5A5B5B	// Sends a confirmed frame on port 4 with
 //application payload 5A5B5B.
 
-char*	Tx				(char* type, uint8_t portno, uint16_t data)
+char*	Tx				(char* type, char* portno, char* data)
 {
-	return Send(TX);
+	char Tx_data[70] = "";
+
+	strncat(Tx_data, TX, strlen(TX));
+	strncat(Tx_data, type, strlen(type));
+	strncat(Tx_data, " ", strlen(" "));
+	strncat(Tx_data, portno, strlen(portno));
+	strncat(Tx_data, " ", strlen(" "));
+	strncat(Tx_data, data, strlen(data));
+	strncat(Tx_data, "\r\n", strlen("\r\n"));
+
+//	HAL_UART_Transmit(&huart1, Tx_data, strlen(Tx_data), HAL_MAX_DELAY);
+
+	return Send(Tx_data);
 }
 
-//<mode>:		string representing the join procedure type (case-insensitive), either otaa or abp (otaa – over-the-air activation, abp – activation by personalization).
-//Response: this command may reply with two responses. The first response will be received immediately after entering the command. In case the command is valid (ok reply received) a second reply will be received after the end of the join procedure.
+//<mode>:		string representing the join procedure type (case-insensitive), either otaa or abp
+//(otaa – over-the-air activation, abp – activation by personalization).
+//Response: this command may reply with two responses. The first response will be received immediately
+//after entering the command. In case the command is valid (ok reply received) a second reply will
+//be received after the end of the join procedure.
 //Please refer to the LoRaWAN™ Specification for further details. Response after entering the command:
-//•	ok – if parameters and configurations are valid and the join request packet was forwarded to the radio transceiver for transmission
+//•	ok – if parameters and configurations are valid and the join request packet was forwarded to the radio
+//transceiver for transmission
 //•	invalid_param – if <mode> is not valid
 //•	keys_not_init – if the keys corresponding to the Join mode (otaa or abp) were not configured
 //•	no_free_ch – if all channels are busy
@@ -311,8 +310,13 @@ char*	Tx				(char* type, uint8_t portno, uint16_t data)
 //•	mac_paused – if MAC was paused and not resumed back Response after the join procedure:
 //•	denied if the join procedure was unsuccessful (the module attempted to join the network, but was rejected);
 //•	accepted if the join procedure was successful;
-//This command informs the RN2483 module it should attempt to join the configured network. Module activation type is selected with <mode>. Parameter values can be otaa (over-the-air activation) or abp (activation by personalization). The <mode> parameter is not case sensitive. Before joining the network, the specific parameters for each activation type should be configured (for over the air activation: device EUI, application EUI, application key; for activation by personalization: device address, network session key, application session key).
-//Example: mac join otaa	// Attempts to join the network using
+//This command informs the RN2483 module it should attempt to join the configured network. Module activation
+//type is selected with <mode>. Parameter values can be otaa (over-the-air activation) or abp
+//(activation by personalization). The <mode> parameter is not case sensitive. Before joining the
+//network, the specific parameters for each activation type should be configured (for over the air
+//activation: device EUI, application EUI, application key; for activation by personalization:
+//device address, network session key, application session key).
+//Example: mac join otaa	 Attempts to join the network using
 //over-the-air activation.
 
 char*	JoinOta			()
