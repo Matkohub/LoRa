@@ -1,11 +1,14 @@
 #include "LoRa.h"
 #include "Init.h"
 
-char response[50];
+char response[100];
 
 char* Send(char *buffer)
 {
+//	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), HAL_MAX_DELAY);
+//	HAL_Delay(100);
 	HAL_UART_Transmit(&huart2, buffer, strlen(buffer), HAL_MAX_DELAY);
+
 	return response;
 }
 
@@ -279,7 +282,7 @@ char*	ResetFreq433	()
 
 char*	Tx				(char* type, char* portno, char* data)
 {
-	char Tx_data[70] = "";
+	char Tx_data[100] = "";
 
 	strncat(Tx_data, TX, strlen(TX));
 	strncat(Tx_data, type, strlen(type));
@@ -288,8 +291,6 @@ char*	Tx				(char* type, char* portno, char* data)
 	strncat(Tx_data, " ", strlen(" "));
 	strncat(Tx_data, data, strlen(data));
 	strncat(Tx_data, "\r\n", strlen("\r\n"));
-
-//	HAL_UART_Transmit(&huart1, Tx_data, strlen(Tx_data), HAL_MAX_DELAY);
 
 	return Send(Tx_data);
 }

@@ -6,6 +6,7 @@
 C_SRCS += \
 ../Core/Src/Init.c \
 ../Core/Src/LoRa.c \
+../Core/Src/Si7021.c \
 ../Core/Src/main.c \
 ../Core/Src/stm32g0xx_hal_msp.c \
 ../Core/Src/stm32g0xx_it.c \
@@ -15,6 +16,7 @@ C_SRCS += \
 OBJS += \
 ./Core/Src/Init.o \
 ./Core/Src/LoRa.o \
+./Core/Src/Si7021.o \
 ./Core/Src/main.o \
 ./Core/Src/stm32g0xx_hal_msp.o \
 ./Core/Src/stm32g0xx_it.o \
@@ -24,6 +26,7 @@ OBJS += \
 C_DEPS += \
 ./Core/Src/Init.d \
 ./Core/Src/LoRa.d \
+./Core/Src/Si7021.d \
 ./Core/Src/main.d \
 ./Core/Src/stm32g0xx_hal_msp.d \
 ./Core/Src/stm32g0xx_it.d \
