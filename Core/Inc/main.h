@@ -16,6 +16,7 @@ char* format_temp_hum(float temperature, float humidity);
 void ftoa(float n, char* res, int afterpoint);
 int intToStr(int x, char str[], int d);
 void reverse(char* str, int len);
+void check_response(uint8_t* response);
 
 
 

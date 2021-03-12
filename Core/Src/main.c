@@ -4,6 +4,9 @@ uint8_t rx_index = 0;
 uint8_t rx_data;
 uint8_t rx_buffer[100];
 uint8_t message = 0;
+uint8_t joined = 0;
+char x='1';
+char *p=&x;
 
 float temperature, humidity;
 float *ptemp = &temperature, *phum = &humidity;
@@ -59,27 +62,54 @@ int main(void)
 	//  while(message!=1);
 	//  message = 0;
 
-	JoinAbp();
-	while(message!=1);
-	message = 0;
+//	SetDevaddr();
+//	while(message!=1);
+//	message = 0;
+//	SetNwkskey();
+//	while(message!=1);
+//	message = 0;
+//	SetAppskey();
+//	while(message!=1);
+//	message = 0;
+//	Save();
+//	while(message!=1);
+//	message = 0;
 
 	while (1)
 	{
-		if(message==0)
-			r_both_Si7021(phum, ptemp);
+		if(joined == 0)
+		{
+			JoinAbp();
+			while(message!=1);
+			message = 0;
+			joined = 1;
+			HAL_Delay(1000);
+
+		}
+
+		r_both_Si7021(phum, ptemp);
 
 		format_temp_hum(temperature, humidity);
 
-		Tx("uncnf", "1", f_data);
+		if(x=='9')
+			x='1';
+		Tx("uncnf", p, f_data);
 		while(message!=1);
 		message = 0;
+		x++;
+
 
 		for(int i=0; i<100; i++)
 			f_data[i] = 0;
 
-		if(message == 0)
+		for(int i=0; i<15; i++)
 			HAL_Delay(60000);
 	}
+}
+
+void check_response(uint8_t* response)
+{
+
 }
 
 char* format_temp_hum(float temperature, float humidity)
@@ -98,7 +128,7 @@ char* format_temp_hum(float temperature, float humidity)
 	strncat(f_data, "B", 1);
 	strncat(f_data, con, strlen(con));
 	strncat(f_data, "C", 1);
-	strncat(f_data, "\r\n", strlen("\r\n"));
+//	strncat(f_data, "\r\n", strlen("\r\n"));
 
 	return f_data;
 }
