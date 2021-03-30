@@ -3,16 +3,6 @@
 #define OTA            "otaa"
 #define ABP            "abp"
 
-//OTAA keys
-#define appkey 			"8A465B4FC57F03AA95FFCC662D9D1C44\r\n"
-#define deveui 			"BE7A00000000301C\r\n"
-#define appeui 			"BE7A0000000023CE\r\n"
-
-//ABP keys
-#define devaddr 		"30C5A958\r\n"
-#define nwkskey 		"EA9F51B388F7509101C870CEABAB44CA\r\n"
-#define appskey 		"6DCE01412167FF3EF0DF822910232630\r\n"
-
 //OTAA defines
 #define SET_APPKEY 		"mac set appkey 8A465B4FC57F03AA95FFCC662D9D1C44\r\n"
 #define SET_DEVEUI 		"mac set deveui BE7A00000000301C\r\n"

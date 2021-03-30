@@ -1,50 +1,26 @@
 #include "main.h"
 
-uint8_t rx_index = 0;
-uint8_t rx_data;
-uint8_t rx_buffer[100];
-uint8_t message = 0;
-uint8_t joined = 0;
-char x='1';
-char *p=&x;
+LoRa lora;
+Callback callback;
 
+//Si7021 variables
 float temperature, humidity;
 float *ptemp = &temperature, *phum = &humidity;
 char con[25] = "";
-char f_data[100] = "";
 
-uint8_t cnt=0, ok = 0;
-char rs[9] = "mac_tx_ok";
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void Struct_init()
 {
+	lora.rx_index = 0;
+	lora.message = 0;
+	lora.joined = 0;
+	lora.x='1';
+	*lora.p=&lora.x;
 
-	if(rx_index == 0)
-		for(uint8_t i = 0; i < 50; i++)
-			rx_buffer[i] = 0;
-
-	if(huart->Instance == USART2)
-	{
-		if((rx_data != 13) && (rx_data != 10) )
-			rx_buffer[rx_index++] = rx_data;
-
-		if(rx_data == 10)
-		{
-			for(int i = 0; i < 9; i++)
-				if(rx_buffer[i] == rs[i])
-					cnt++;
-			if(cnt == 9)
-				ok++;
-			cnt = 0;
-
-			HAL_UART_Transmit(&huart1, rx_buffer, strlen(rx_buffer), HAL_MAX_DELAY);
-			HAL_UART_Transmit(&huart1, "\r\n", strlen("\r\n"), HAL_MAX_DELAY);
-			rx_index = 0;
-			message = 1;
-		}
-	}
-
-	HAL_UART_Receive_IT(&huart2, &rx_data, 1);
+	strncat(callback.Tx_ok, "mac_tx_ok", strlen("mac_tx_ok"));
+	strncat(callback.Joined, "not_joined", strlen("not_joined"));
+	callback.cj=0;
+	callback.cnt=0;
+	callback.ok=0;
 }
 
 int main(void)
@@ -55,82 +31,122 @@ int main(void)
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
 	MX_I2C1_Init();
+	Struct_init();
 
-	HAL_UART_Receive_IT(&huart2, &rx_data, 1);
+	HAL_UART_Receive_IT(&huart2, &lora.rx_data, 1);
 
-	//  GetVersion();
-	//  while(message!=1);
-	//  message = 0;
+//	GetVersion();
+//	while(lora.message!=1);
+//	lora.message = 0;
 
 //	SetDevaddr();
-//	while(message!=1);
-//	message = 0;
 //	SetNwkskey();
-//	while(message!=1);
-//	message = 0;
 //	SetAppskey();
-//	while(message!=1);
-//	message = 0;
-//	Save();
-//	while(message!=1);
-//	message = 0;
+
 
 	while (1)
 	{
-		if(joined == 0)
+		//joining network
+		if(lora.joined == 0)
 		{
 			JoinAbp();
-			while(message!=1);
-			message = 0;
-			joined = 1;
+			while(lora.message!=1);
+			lora.message = 0;
+			lora.joined = 1;
 			HAL_Delay(1000);
-
 		}
 
-		r_both_Si7021(phum, ptemp);
+		//empty send buffer
+		for(int i=0; i<100; i++)
+			lora.f_data[i] = 0;
+
+//		r_both_Si7021(phum, ptemp);
 
 		format_temp_hum(temperature, humidity);
 
-		if(x=='9')
-			x='1';
-		Tx("uncnf", p, f_data);
-		while(message!=1);
-		message = 0;
-		x++;
+		//switch channel
+		if(lora.x=='9')
+			lora.x='1';
+
+		//send data
+		Tx("uncnf", lora.p, lora.f_data);
+		while(lora.message!=1);
+		lora.message = 0;
+		lora.x++;
 
 
-		for(int i=0; i<100; i++)
-			f_data[i] = 0;
 
-		for(int i=0; i<15; i++)
+
+		for(int i=0; i<30; i++)
 			HAL_Delay(60000);
 	}
 }
 
-void check_response(uint8_t* response)
+void Response_callback()
 {
+	//counting tx ok responses in ok variable
+	for(int i = 0; i < 9; i++)
+		if(lora.rx_buffer[i] == callback.Tx_ok[i])
+			callback.cnt++;
+	if(callback.cnt == 9)
+		callback.ok++;
+	callback.cnt = 0;
 
+	//setting flag joined to 0 if not connected response
+	for(int i = 0; i < 10; i++)
+		if(lora.rx_buffer[i] == callback.Joined[i])
+			callback.cj++;
+	if(callback.cj==10)
+		lora.joined = 0;
 }
 
-char* format_temp_hum(float temperature, float humidity)
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	//empty receive buffer for new data
+	if(lora.rx_index == 0)
+		for(uint8_t i = 0; i < 50; i++)
+			lora.rx_buffer[i] = 0;
+
+	if(huart->Instance == USART2)
+	{
+		//fill buffer with new data if it's not NL or CR
+		if((lora.rx_data != 13) && (lora.rx_data != 10) )
+			lora.rx_buffer[lora.rx_index++] = lora.rx_data;
+
+		//end of received data
+		if(lora.rx_data == 10)
+		{
+			Response_callback();
+
+			HAL_UART_Transmit(&huart1, lora.rx_buffer, strlen(lora.rx_buffer), HAL_MAX_DELAY);
+			HAL_UART_Transmit(&huart1, "\r\n", strlen("\r\n"), HAL_MAX_DELAY);
+
+			lora.rx_index = 0;
+			lora.message = 1;
+		}
+	}
+
+	HAL_UART_Receive_IT(&huart2, &lora.rx_data, 1);
+}
+
+
+
+void format_temp_hum(float temperature, float humidity)
 {
 	ftoa(temperature, con, 0);
 
-	strncat(f_data, "A", 1);
-	strncat(f_data, "1", 1);
-	strncat(f_data, "B", 1);
-	strncat(f_data, con, strlen(con));
-	strncat(f_data, "A", 1);
+	strncat(lora.f_data, "A", 1);
+	strncat(lora.f_data, "1", 1);
+	strncat(lora.f_data, "B", 1);
+	strncat(lora.f_data, con, strlen(con));
+	strncat(lora.f_data, "A", 1);
 
 	ftoa(humidity, con, 0);
 
-	strncat(f_data, "2", 1);
-	strncat(f_data, "B", 1);
-	strncat(f_data, con, strlen(con));
-	strncat(f_data, "C", 1);
-//	strncat(f_data, "\r\n", strlen("\r\n"));
-
-	return f_data;
+	strncat(lora.f_data, "2", 1);
+	strncat(lora.f_data, "B", 1);
+	strncat(lora.f_data, con, strlen(con));
+	strncat(lora.f_data, "C", 1);
 }
 
 void ftoa(float n, char* res, int afterpoint)
@@ -145,7 +161,8 @@ void ftoa(float n, char* res, int afterpoint)
     int i = intToStr(ipart, res, 0);
 
     // check for display option after point
-    if (afterpoint != 0) {
+    if (afterpoint != 0)
+    {
         res[i] = '.'; // add dot
 
         // Get the value of fraction part upto given no.
@@ -160,7 +177,8 @@ void ftoa(float n, char* res, int afterpoint)
 int intToStr(int x, char str[], int d)
 {
     int i = 0;
-    while (x) {
+    while (x)
+    {
         str[i++] = (x % 10) + '0';
         x = x / 10;
     }
@@ -178,7 +196,8 @@ int intToStr(int x, char str[], int d)
 void reverse(char* str, int len)
 {
     int i = 0, j = len - 1, temp;
-    while (i < j) {
+    while (i < j)
+    {
         temp = str[i];
         str[i] = str[j];
         str[j] = temp;
