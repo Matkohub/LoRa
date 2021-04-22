@@ -34,6 +34,8 @@ Core/Src/stm32g0xx_it.o: ../Core/Src/stm32g0xx_it.c \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Init.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/LoRa.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Si7021.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/BME280.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/EPY12231.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/stm32g0xx_it.h
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/main.h:
@@ -105,5 +107,9 @@ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Init.h:
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/LoRa.h:
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Si7021.h:
+
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/BME280.h:
+
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/EPY12231.h:
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/stm32g0xx_it.h:

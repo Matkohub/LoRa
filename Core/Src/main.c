@@ -1,12 +1,23 @@
 #include "main.h"
 
+uint8_t rxx[30];
+uint8_t ii=0;
 LoRa lora;
 Callback callback;
+
+uint8_t dht1;
+uint8_t dht2;
 
 //Si7021 variables
 float temperature, humidity;
 float *ptemp = &temperature, *phum = &humidity;
 char con[25] = "";
+
+BMP280_HandleTypedef bmp280;
+float bmetlak, bmetemp, bmehum;
+double H;
+int tm;
+uint32_t pr, hm;
 
 void Struct_init()
 {
@@ -33,16 +44,38 @@ int main(void)
 	MX_I2C1_Init();
 	Struct_init();
 
+
+
+    bmp280_init_default_params(&bmp280.params);
+    bmp280.addr = BMP280_I2C_ADDRESS_0;
+    bmp280.i2c = &hi2c1;
+    bmp280_init(&bmp280, &bmp280.params);
+
+
+	while (1)
+	{
+//		DHT11_Start();
+//		dht1=Check_Response();
+//		dht2=DHT11_Read();
+
+		bmp280_read_float(&bmp280, &bmetemp, &bmetlak, &bmehum);
+//		bmp280_read_fixed(&bmp280, &tm, &bmetlak, &hm);
+		H = 44330 * (1 - (pr/1013.25));
+		H = pow(H, (1/5.255));
+
+		r_both_Si7021(phum, ptemp);
+		HAL_Delay(100);
+	}
+
 	HAL_UART_Receive_IT(&huart2, &lora.rx_data, 1);
 
-//	GetVersion();
-//	while(lora.message!=1);
-//	lora.message = 0;
+	GetVersion();
+	while(lora.message!=1);
+	lora.message = 0;
 
 //	SetDevaddr();
 //	SetNwkskey();
 //	SetAppskey();
-
 
 	while (1)
 	{
@@ -74,9 +107,6 @@ int main(void)
 		lora.message = 0;
 		lora.x++;
 
-
-
-
 		for(int i=0; i<30; i++)
 			HAL_Delay(60000);
 	}
@@ -102,6 +132,10 @@ void Response_callback()
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
+	HAL_UART_Transmit(&huart2, &lora.rx_data, 1, HAL_MAX_DELAY);
+
+	rxx[ii]=lora.rx_data;
+	ii++;
 	//empty receive buffer for new data
 	if(lora.rx_index == 0)
 		for(uint8_t i = 0; i < 50; i++)
@@ -117,9 +151,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		if(lora.rx_data == 10)
 		{
 			Response_callback();
-
-			HAL_UART_Transmit(&huart1, lora.rx_buffer, strlen(lora.rx_buffer), HAL_MAX_DELAY);
-			HAL_UART_Transmit(&huart1, "\r\n", strlen("\r\n"), HAL_MAX_DELAY);
 
 			lora.rx_index = 0;
 			lora.message = 1;
@@ -206,14 +237,49 @@ void reverse(char* str, int len)
     }
 }
 
+/*
+void DHT11_Start (void)
+{
+	Set_Pin_Output (DHT11_PORT, DHT11_PIN);  // set the pin as output
+	HAL_GPIO_WritePin (DHT11_PORT, DHT11_PIN, 0);   // pull the pin low
+	delay (18000);   // wait for 18ms
+	Set_Pin_Input(DHT11_PORT, DHT11_PIN);    // set as input
+}
+
+uint8_t Check_Response (void)
+{
+	uint8_t Response = 0;
+	delay (40);
+	if (!(HAL_GPIO_ReadPin (DHT11_PORT, DHT11_PIN)))
+	{
+		delay (80);
+		if ((HAL_GPIO_ReadPin (DHT11_PORT, DHT11_PIN))) Response = 1;
+		else Response = -1;
+	}
+	while ((HAL_GPIO_ReadPin (DHT11_PORT, DHT11_PIN)));   // wait for the pin to go low
+
+	return Response;
+}
+
+uint8_t DHT11_Read (void)
+{
+	uint8_t i,j;
+	for (j=0;j<8;j++)
+	{
+		while (!(HAL_GPIO_ReadPin (DHT11_PORT, DHT11_PIN)));   // wait for the pin to go high
+		delay (40);   // wait for 40 us
+		if (!(HAL_GPIO_ReadPin (DHT11_PORT, DHT11_PIN)))   // if the pin is low
+		{
+			i&= ~(1<<(7-j));   // write 0
+		}
+		else i|= (1<<(7-j));  // if the pin is high, write 1
+		while ((HAL_GPIO_ReadPin (DHT11_PORT, DHT11_PIN)));  // wait for the pin to go low
+	}
+	return i;
+}
 
 
-
-
-
-
-
-
+*/
 
 
 
