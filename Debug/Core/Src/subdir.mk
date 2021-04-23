@@ -5,10 +5,11 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/BME280.c \
-../Core/Src/EPY12231.c \
+../Core/Src/Funcionality.c \
 ../Core/Src/Init.c \
 ../Core/Src/LoRa.c \
 ../Core/Src/Si7021.c \
+../Core/Src/ftoa.c \
 ../Core/Src/main.c \
 ../Core/Src/stm32g0xx_hal_msp.c \
 ../Core/Src/stm32g0xx_it.c \
@@ -17,10 +18,11 @@ C_SRCS += \
 
 OBJS += \
 ./Core/Src/BME280.o \
-./Core/Src/EPY12231.o \
+./Core/Src/Funcionality.o \
 ./Core/Src/Init.o \
 ./Core/Src/LoRa.o \
 ./Core/Src/Si7021.o \
+./Core/Src/ftoa.o \
 ./Core/Src/main.o \
 ./Core/Src/stm32g0xx_hal_msp.o \
 ./Core/Src/stm32g0xx_it.o \
@@ -29,10 +31,11 @@ OBJS += \
 
 C_DEPS += \
 ./Core/Src/BME280.d \
-./Core/Src/EPY12231.d \
+./Core/Src/Funcionality.d \
 ./Core/Src/Init.d \
 ./Core/Src/LoRa.d \
 ./Core/Src/Si7021.d \
+./Core/Src/ftoa.d \
 ./Core/Src/main.d \
 ./Core/Src/stm32g0xx_hal_msp.d \
 ./Core/Src/stm32g0xx_it.d \

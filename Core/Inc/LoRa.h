@@ -5,13 +5,13 @@
 
 //OTAA defines
 #define SET_APPKEY 		"mac set appkey 8A465B4FC57F03AA95FFCC662D9D1C44\r\n"
-#define SET_DEVEUI 		"mac set deveui BE7A00000000301C\r\n"
+#define SET_DEVEUI 		"mac set deveui BE7A00000000304B\r\n"
 #define SET_APPEUI 		"mac set appeui BE7A0000000023CE\r\n"
 
 //ABP defines
-#define SET_DEVADDR 	"mac set devaddr 30C5A958\r\n"
-#define SET_NWKSKEY 	"mac set nwkskey EA9F51B388F7509101C870CEABAB44CA\r\n"
-#define SET_APPSKEY 	"mac set appskey 6DCE01412167FF3EF0DF822910232630\r\n"
+#define SET_DEVADDR 	"mac set devaddr 014E5A84\r\n"
+#define SET_NWKSKEY 	"mac set nwkskey 6B4B973C250562D14F2B6CB50D155F1D\r\n"
+#define SET_APPSKEY 	"mac set appskey F5F2BDDE3BBA29CD7A7C554E911FC59E\r\n"
 
 // SYS Commands
 #define SLEEP           "sys sleep\r\n"			//sleep for x miliseconds

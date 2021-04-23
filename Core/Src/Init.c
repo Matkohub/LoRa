@@ -1,5 +1,13 @@
 #include "Init.h"
 
+void bmp280i()
+{
+    bmp280_init_default_params(&bmp280.params);
+    bmp280.addr = BMP280_I2C_ADDRESS_0;
+    bmp280.i2c = &hi2c1;
+    bmp280_init(&bmp280, &bmp280.params);
+}
+
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
