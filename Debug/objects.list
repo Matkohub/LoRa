@@ -1,4 +1,5 @@
 "Core/Src/BME280.o"
+"Core/Src/EPY12231.o"
 "Core/Src/Funcionality.o"
 "Core/Src/Init.o"
 "Core/Src/LoRa.o"

@@ -1,15 +1,4 @@
 #include "LoRa.h"
-#include "Init.h"
-
-char response[100];
-
-char* Send(char *buffer)
-{
-	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), HAL_MAX_DELAY);
-	HAL_UART_Transmit(&huart2, buffer, strlen(buffer), HAL_MAX_DELAY);
-
-	return response;
-}
 
 //Set OTAA keys
 

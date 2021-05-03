@@ -1,23 +1,12 @@
 #include "main.h"
 
-////////////////////////////	DEFINES			///////////////////////////
-//structure defines
-LoRa lora, *p;
-Callback callback;
-
-//dht variables
-uint8_t dht1, dht2;
-
-//Si7021 variables
-float temperature, humidity;
-float *ptemp = &temperature, *phum = &humidity;
-
-//bmp280 variables
-float bmetlak, bmetemp, bmehum;
-
 //port variables
 char port[9] = "123456789";
 uint8_t q=0;
+
+//retarded si
+float temperature, humidity;
+float *ptemp = &temperature, *phum = &humidity;
 
 int main(void)
 {
@@ -29,12 +18,19 @@ int main(void)
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
 	MX_I2C1_Init();
+	MX_TIM14_Init();
 	Struct_init(lora, callback);
 	bmp280i();
+	CO2();
 
+	//start receive interrupt
 	HAL_UART_Receive_IT(&huart2, &lora.rx_data, 1);
 
-	LoRa_system(lora);
+////////////////////////////	SET KEYS		///////////////////////////
+
+//	LoRa_system(lora);
+
+////////////////////////////	LOOP			///////////////////////////
 
 	while (1)
 	{
@@ -44,35 +40,38 @@ int main(void)
 		if(lora.joined == 0)
 		{
 			JoinAbp();
-			while(lora.message!=1);
-			lora.message = 0;
-			lora.joined = 1;
 		}
+
+////////////////////////////	READ SENSORS	///////////////////////////
+
+		//bmp is stupid so needs to read twice
+		bmp280_read_float(&bmp280, &bmetemp, &bmetlak, &bmehum);
+		HAL_Delay(100);
+		bmp280_read_float(&bmp280, &bmetemp, &bmetlak, &bmehum);
+
+		//Si
+		r_both_Si7021(phum, ptemp);
+
+		//CO2
+		CO2_read();
+
+		p = &lora;
+		format(temperature, humidity, bmetlak, EPY.Channel1_CO2, p);
+
+////////////////////////////	SEND IT			///////////////////////////
+
+		//send
+		Tx("uncnf", &port[q], lora.f_data);
+		//switch channel
+		q++;
+
+		//reset channel count
+		if(q==9)
+			q=0;
 
 		//empty send buffer
 		for(int i=0; i<100; i++)
 			lora.f_data[i] = 0;
-
-////////////////////////////	READ SENSORS	///////////////////////////
-
-		bmp280_read_float(&bmp280, &bmetemp, &bmetlak, &bmehum);
-
-
-		r_both_Si7021(phum, ptemp);
-
-		p = &lora;
-		format(temperature, humidity, p);
-
-////////////////////////////	SEND IT			///////////////////////////
-
-		if(q==9)
-			q=0;
-
-		//send
-		Tx("uncnf", &port[q], lora.f_data);
-		while(lora.message!=1);
-		lora.message = 0;
-		q++;
 
 		//30 min delay
 		for(int i=0; i<30; i++)
@@ -111,30 +110,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void LoRa_system()
 {
 	GetVersion();
-	while(lora.message!=1);
-		lora.message = 0;
 
-//	SetDeveui();
-//	while(lora.message!=1);
-//		lora.message = 0;
-//
-//	SetDevaddr();
-//	while(lora.message!=1);
-//		lora.message = 0;
-//
-//	SetNwkskey();
-//	while(lora.message!=1);
-//		lora.message = 0;
-//
-//	SetAppskey();
-//	while(lora.message!=1);
-//		lora.message = 0;
+	SetDeveui();
+
+	SetDevaddr();
+
+	SetNwkskey();
+
+	SetAppskey();
+
+	Save();
 }
-
-
-
-
-
 
 
 

@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/BME280.c \
+../Core/Src/EPY12231.c \
 ../Core/Src/Funcionality.c \
 ../Core/Src/Init.c \
 ../Core/Src/LoRa.c \
@@ -18,6 +19,7 @@ C_SRCS += \
 
 OBJS += \
 ./Core/Src/BME280.o \
+./Core/Src/EPY12231.o \
 ./Core/Src/Funcionality.o \
 ./Core/Src/Init.o \
 ./Core/Src/LoRa.o \
@@ -31,6 +33,7 @@ OBJS += \
 
 C_DEPS += \
 ./Core/Src/BME280.d \
+./Core/Src/EPY12231.d \
 ./Core/Src/Funcionality.d \
 ./Core/Src/Init.d \
 ./Core/Src/LoRa.d \

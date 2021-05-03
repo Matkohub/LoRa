@@ -1,5 +1,22 @@
 #include "Init.h"
 
+void CO2()
+{
+	EPY.I2C = &hi2c1;
+	EPY12231_Init(&EPY);
+	EPY.Channel_1_Status = 1;
+	EPY.Channel_2_Status = 1;
+	EPY.Channel_3_Status = 1;
+	EPY.Channel_4_Status = 1;
+	EPY.Channel_5_Status = 1;
+
+	EPY12231_CH_Write(&EPY);
+
+	EPY.CLK_OUT = 1;
+
+	EPY12231_Ana_Write(&EPY);
+}
+
 void bmp280i()
 {
     bmp280_init_default_params(&bmp280.params);
@@ -146,6 +163,19 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+}
+
+void MX_TIM14_Init(void)
+{
+  htim14.Instance = TIM14;
+  htim14.Init.Prescaler = 64000-1;
+  htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim14.Init.Period = 65535;
+  htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
+  {
+  }
 }
 
 void Error_Handler(void)

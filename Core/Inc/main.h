@@ -5,17 +5,11 @@
 extern "C" {
 #endif
 
-#include "stm32g0xx_hal.h"
-#include "stdlib.h"
-#include "Init.h"
-#include "LoRa.h"
-#include "Si7021.h"
-#include "BME280.h"
-#include <math.h>
 #include "Funcionality.h"
+#include "Si7021.h"
 
 void Error_Handler(void);
-
+HAL_StatusTypeDef EPY12231_FIFO_Read_Full();
 void LoRa_system();
 
 #ifdef __cplusplus

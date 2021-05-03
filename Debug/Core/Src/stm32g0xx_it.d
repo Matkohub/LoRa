@@ -1,5 +1,7 @@
 Core/Src/stm32g0xx_it.o: ../Core/Src/stm32g0xx_it.c \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/main.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Funcionality.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/ftoa.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/stm32g0xx_hal_conf.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rcc.h \
@@ -29,17 +31,22 @@ Core/Src/stm32g0xx_it.o: ../Core/Src/stm32g0xx_it.c \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_i2c_ex.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr_ex.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Init.h \
- C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/BME280.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/LoRa.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/BME280.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/EPY12231.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Si7021.h \
- C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Funcionality.h \
- C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/ftoa.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/stm32g0xx_it.h
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/main.h:
+
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Funcionality.h:
+
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/ftoa.h:
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
 
@@ -99,20 +106,22 @@ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr_ex.h:
 
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim.h:
+
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h:
+
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h:
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h:
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Init.h:
 
-C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/BME280.h:
-
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/LoRa.h:
 
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/BME280.h:
+
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/EPY12231.h:
+
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Si7021.h:
-
-C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/Funcionality.h:
-
-C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/ftoa.h:
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Core/Inc/stm32g0xx_it.h:

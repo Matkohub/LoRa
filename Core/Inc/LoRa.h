@@ -1,17 +1,39 @@
 #include "stm32g0xx_hal.h"
 
+typedef struct LoRa
+{
+	char f_data[100];
+	uint8_t rx_index;
+	uint8_t rx_data;
+	uint8_t rx_buffer[100];
+	uint8_t message;
+	uint8_t joined;
+} LoRa;
+
+typedef struct Callback
+{
+	char Tx_ok[9];
+	char Joined[10];
+	uint8_t cnt;
+	uint8_t ok;
+	uint8_t cj;
+} Callback;
+
+LoRa lora, *p;
+Callback callback;
+
 #define OTA            "otaa"
 #define ABP            "abp"
 
 //OTAA defines
 #define SET_APPKEY 		"mac set appkey 8A465B4FC57F03AA95FFCC662D9D1C44\r\n"
 #define SET_DEVEUI 		"mac set deveui BE7A00000000304B\r\n"
-#define SET_APPEUI 		"mac set appeui BE7A0000000023CE\r\n"
+#define SET_APPEUI 		"mac set appeui BE7A000000003048\r\n"
 
 //ABP defines
-#define SET_DEVADDR 	"mac set devaddr 014E5A84\r\n"
-#define SET_NWKSKEY 	"mac set nwkskey 6B4B973C250562D14F2B6CB50D155F1D\r\n"
-#define SET_APPSKEY 	"mac set appskey F5F2BDDE3BBA29CD7A7C554E911FC59E\r\n"
+#define SET_DEVADDR 	"mac set devaddr 00312E4A\r\n"
+#define SET_NWKSKEY 	"mac set nwkskey 6D752DC7F0D730C93729A232FC1AA760\r\n"
+#define SET_APPSKEY 	"mac set appskey F44E033CEABD69AF77F594B9DD17ACFC\r\n"
 
 // SYS Commands
 #define SLEEP           "sys sleep\r\n"			//sleep for x miliseconds
@@ -78,6 +100,7 @@
 // FUNCTION DEFINES ///////////////////////////////////////////////
 
 char*	Send			(char *buffer);
+
 char*	Receive			();
 
 //Set OTAA keys
