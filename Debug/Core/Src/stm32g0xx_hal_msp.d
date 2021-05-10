@@ -31,6 +31,8 @@ Core/Src/stm32g0xx_hal_msp.o: ../Core/Src/stm32g0xx_hal_msp.c \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_i2c_ex.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr_ex.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rtc.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rtc_ex.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
@@ -104,6 +106,10 @@ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr.h:
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr_ex.h:
+
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rtc.h:
+
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rtc_ex.h:
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim.h:
 

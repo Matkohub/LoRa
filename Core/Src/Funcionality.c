@@ -2,7 +2,6 @@
 
 char response[100];
 char con[25] = "";
-uint8_t cnt=0;
 
 //Send to LoRa
 char* Send(char *buffer)
@@ -13,37 +12,35 @@ char* Send(char *buffer)
 	//timer for message timeout
 	HAL_TIM_Base_Start(&htim14);
 
-	//message timeout	//will resend once if timeout expires
-	while(lora.message!=1)
-		if(__HAL_TIM_GET_COUNTER(&htim14)>=1000)
+	if(lora.message == 0)
+	{
+		//message timeout	//will resend once if timeout expires
+		while(__HAL_TIM_GET_COUNTER(&htim14)<=1000);
+
+		__HAL_TIM_SET_COUNTER(&htim14, 0);
+		HAL_TIM_Base_Stop(&htim14);
+
+		if(lora.message == 1)
 		{
-			HAL_TIM_Base_Stop(&htim14);
-			if(cnt == 0)
-			{
-				cnt++;
-				Send(buffer);
-			}
-			else
-			{
-				cnt = 0;
-				break;
-			}
+			lora.message=0;
+			return response;
 		}
+	}
 
 	lora.message = 0;
-
 	return response;
 }
 
 void Response_callback(LoRa lora, Callback callback)
 {
 	//counting tx ok responses in ok variable
-	for(int i = 0; i < 9; i++)
-		if(lora.rx_buffer[i] == callback.Tx_ok[i])
-			callback.cnt++;
-	if(callback.cnt == 9)
-		callback.ok++;
-	callback.cnt = 0;
+	for(int i = 0; i < 2; i++)
+		if(lora.rx_buffer[i] == callback.ok[i])
+			callback.okc++;
+	if(callback.okc == 2)
+		lora.wake_up = 1;
+	else
+		lora.wake_up = 0;
 
 	//setting flag joined based on response
 	for(int i = 0; i < 10; i++)
@@ -67,15 +64,16 @@ void LoRa_init(LoRa lora)
 	lora.rx_index = 0;
 	lora.message = 0;
 	lora.joined = 0;
+	lora.wake_up = 0;
 }
 
 void Callback_init(Callback callback)
 {
-	strncat(callback.Tx_ok, "mac_tx_ok", strlen("mac_tx_ok"));
+	strncat(callback.ok, "ok", strlen("mac_tx_ok"));
+	callback.okc = 0;
+
 	strncat(callback.Joined, "not_joined", strlen("not_joined"));
 	callback.cj=0;
-	callback.cnt=0;
-	callback.ok=0;
 }
 
 //make format for sending data

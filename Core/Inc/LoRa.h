@@ -8,15 +8,19 @@ typedef struct LoRa
 	uint8_t rx_buffer[100];
 	uint8_t message;
 	uint8_t joined;
+	uint8_t wake_up;
 } LoRa;
 
 typedef struct Callback
 {
-	char Tx_ok[9];
+	//ok var
+	char ok[2];
+	uint8_t okc;
+
+	//joined var
 	char Joined[10];
-	uint8_t cnt;
-	uint8_t ok;
 	uint8_t cj;
+
 } Callback;
 
 LoRa lora, *p;
@@ -35,8 +39,11 @@ Callback callback;
 #define SET_NWKSKEY 	"mac set nwkskey 6D752DC7F0D730C93729A232FC1AA760\r\n"
 #define SET_APPSKEY 	"mac set appskey F44E033CEABD69AF77F594B9DD17ACFC\r\n"
 
+
+#define SLEEP           "sys sleep 1800000\r\n"	//sleep for x miliseconds
+
 // SYS Commands
-#define SLEEP           "sys sleep\r\n"			//sleep for x miliseconds
+//#define SLEEP           "sys sleep 1800000\r\n"	//sleep for x miliseconds
 #define RESET           "sys reset\r\n"			//reset device
 #define ERASE_FW		"sys eraseFW\r\n"		//erases firmware and prepares for upgrades
 #define FACTORY_RESET   "sys factoryRESET\r\n"	//reset to factory settings
@@ -120,7 +127,7 @@ char*	SetAppskey		();
 //char*	SetAppskey		(uint64_t key1, uint64_t key2);
 
 //System funcions
-char*	Sleep			(int lenght);
+char*	Sleep			();
 char*	Reset			();
 char*	Erasefw			();
 char*	FactoryReset	();

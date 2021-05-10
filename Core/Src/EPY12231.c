@@ -1,14 +1,11 @@
-/*
- * EPY12231.c
- *
- *  Created on: May 21, 2020
- *      Author: Josip
- */
-
 #include "EPY12231.h"
 
 void CO2_read()
 {
+	uint8_t rd;
+	HAL_I2C_Mem_Read(EPY.dat, ADDRESS, WAKE_UP, 1, &rd, 1, I2C_TIMEOUT);
+
+
 	HAL_I2C_Mem_Read(&hi2c1, ADDRESS, 0x04, 1, &EPY.dat, 1, HAL_MAX_DELAY);
 
 	//read only if there if FIFO is full //if there is 14 values
@@ -18,6 +15,8 @@ void CO2_read()
 		EPY_EPY12231_FIFO_Clear(&EPY);
 		EPY_EPY12231_FIFO_Reset(&EPY);
 	}
+
+	HAL_I2C_Mem_Read(EPY.dat, ADDRESS, GO_TO_SLEEP, 1, &rd, 1, I2C_TIMEOUT);
 }
 
 void EPY12231_Init(TypeDefHandleEPY12231 *Handle)

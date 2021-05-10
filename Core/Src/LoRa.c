@@ -109,7 +109,7 @@ char*	SetAppskey		()
 //This command puts the system to Sleep for the specified number of milliseconds. The module can be forced to exit from Sleep by sending a break condition followed by a 0x55 character at the new baud rate. Note that the break condition needs to be long enough not to be interpreted as a valid character at the current baud rate.
 //Example: sys sleep 120	// Puts the system to Sleep for 120 ms.
 
-char*	Sleep			(int lenght)
+char*	Sleep			()
 {
 	return Send(SLEEP);
 }
