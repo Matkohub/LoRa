@@ -31,49 +31,53 @@ char* Send(char *buffer)
 	return response;
 }
 
-void Response_callback(LoRa lora, Callback callback)
+void Response_callback(LoRa *lora, Callback *callback)
 {
-	//counting tx ok responses in ok variable
+	//set flag if ok response
 	for(int i = 0; i < 2; i++)
-		if(lora.rx_buffer[i] == callback.ok[i])
-			callback.okc++;
-	if(callback.okc == 2)
-		lora.wake_up = 1;
-	else
-		lora.wake_up = 0;
+		if(lora->rx_buffer[i] == callback->ok[i])
+			callback->cnt++;
+	if(callback->cnt == 2)
+		lora->flag = 1;
 
 	//setting flag joined based on response
-	for(int i = 0; i < 10; i++)
-		if(lora.rx_buffer[i] == callback.Joined[i])
-			callback.cj++;
-	if(callback.cj==10)
-		lora.joined = 0;
-	else
-		lora.joined = 1;
+	for(int i = 0; i < 8; i++)
+		if(lora->rx_buffer[i] == callback->Joined[i])
+			callback->cnt++;
+	if(callback->cnt==8)
+		lora->flag = 1;
+
+	//setting flag if the message is sent
+	for(int i = 0; i < 9; i++)
+		if(lora->rx_buffer[i] == callback->Tx_ok[i])
+			callback->cnt++;
+	if(callback->cnt==9)
+		lora->flag = 1;
+
+	callback->cnt = 0;
 }
 
 //init structures
-void Struct_init(LoRa lora, Callback callback)
+void Struct_init(LoRa* lora, Callback* callback)
 {
 	LoRa_init(lora);
 	Callback_init(callback);
 }
 
-void LoRa_init(LoRa lora)
+void LoRa_init(LoRa* lora)
 {
-	lora.rx_index = 0;
-	lora.message = 0;
-	lora.joined = 0;
-	lora.wake_up = 0;
+	lora->rx_index = 0;
+	lora->message = 0;
+	lora->flag = 0;
 }
 
-void Callback_init(Callback callback)
+void Callback_init(Callback *callback)
 {
-	strncat(callback.ok, "ok", strlen("mac_tx_ok"));
-	callback.okc = 0;
+	callback->cnt = 0;
 
-	strncat(callback.Joined, "not_joined", strlen("not_joined"));
-	callback.cj=0;
+	strncat(callback->ok, "ok", strlen("ok"));
+	strncat(callback->Joined, "accepted", strlen("accepted"));
+	strncat(callback->Tx_ok, "mac_tx_ok", strlen("mac_tx_ok"));
 }
 
 //make format for sending data
@@ -110,7 +114,18 @@ void format(float temperature, float humidity, float tlak, uint32_t co2, LoRa *l
 	strncat(lora->f_data, "C", 1);
 }
 
+void Response_timeout(LoRa *lora)
+{
+	HAL_TIM_Base_Start(&htim14);
 
+	while((__HAL_TIM_GET_COUNTER(&htim14)<=5000) && (lora->flag == 0));
+
+	__HAL_TIM_SET_COUNTER(&htim14, 0);
+	HAL_TIM_Base_Stop(&htim14);
+
+	if(lora->flag == 1)
+		lora->flag=0;
+}
 
 
 

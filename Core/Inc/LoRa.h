@@ -7,24 +7,21 @@ typedef struct LoRa
 	uint8_t rx_data;
 	uint8_t rx_buffer[100];
 	uint8_t message;
-	uint8_t joined;
-	uint8_t wake_up;
+	uint8_t flag;
 } LoRa;
 
 typedef struct Callback
 {
-	//ok var
-	char ok[2];
-	uint8_t okc;
+	uint8_t cnt;
 
-	//joined var
-	char Joined[10];
-	uint8_t cj;
+	char ok[20];
+	char Joined[20];
+	char Tx_ok[20];
 
 } Callback;
 
-LoRa lora, *p;
-Callback callback;
+LoRa lora, *l;
+Callback callback, *c;
 
 #define OTA            "otaa"
 #define ABP            "abp"
@@ -39,8 +36,8 @@ Callback callback;
 #define SET_NWKSKEY 	"mac set nwkskey 6D752DC7F0D730C93729A232FC1AA760\r\n"
 #define SET_APPSKEY 	"mac set appskey F44E033CEABD69AF77F594B9DD17ACFC\r\n"
 
-
-#define SLEEP           "sys sleep 1800000\r\n"	//sleep for x miliseconds
+//#define SLEEP			"sys sleep 9000\r\n"	//test sleep
+#define SLEEP           "sys sleep 1799000\r\n"	//sleep for x miliseconds
 
 // SYS Commands
 //#define SLEEP           "sys sleep 1800000\r\n"	//sleep for x miliseconds

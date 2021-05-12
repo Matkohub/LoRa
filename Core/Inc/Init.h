@@ -16,6 +16,7 @@ void bmp280i();
 void CO2();
 void MX_TIM14_Init(void);
 void MX_RTC_Init(void);
+void MX_IWDG_Init(void);
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -23,7 +24,7 @@ I2C_HandleTypeDef hi2c1;
 BMP280_HandleTypedef bmp280;
 TIM_HandleTypeDef htim14;
 RTC_HandleTypeDef hrtc;
-
+IWDG_HandleTypeDef hiwdg;
 
 
 //bmp280 variables

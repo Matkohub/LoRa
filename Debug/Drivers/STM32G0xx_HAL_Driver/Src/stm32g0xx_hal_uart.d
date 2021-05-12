@@ -27,6 +27,7 @@ Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_uart.o: \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_flash_ex.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_i2c.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_i2c_ex.h \
+ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_iwdg.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr_ex.h \
  C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rtc.h \
@@ -89,6 +90,8 @@ C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_i2c.h:
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_i2c_ex.h:
+
+C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_iwdg.h:
 
 C:/Users/MZrnic/Documents/STM\ Projects/LoRaV2/Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr.h:
 

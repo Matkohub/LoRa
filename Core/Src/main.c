@@ -1,12 +1,10 @@
 #include "main.h"
 
-//port variables
-char port[9] = "123456789";
-uint8_t q=0;
-
 //retarded si
 float temperature, humidity;
 float *ptemp = &temperature, *phum = &humidity;
+
+////////////////////////////////////////	MAIN	////////////////////////////////////////////////////////////////////
 
 int main(void)
 {
@@ -26,6 +24,8 @@ int main(void)
 	}
 }
 
+////////////////////////////////////////	CALLBACK	////////////////////////////////////////////////////////////////
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	//empty receive buffer for new data
@@ -42,10 +42,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		//end of received data
 		if(lora.rx_data == 10)
 		{
-			Response_callback(lora, callback);
-
 			HAL_UART_Transmit(&huart1, lora.rx_buffer, lora.rx_index, HAL_MAX_DELAY);
 			HAL_UART_Transmit(&huart1, "\r\n", 2, HAL_MAX_DELAY);
+
+			Response_callback(l, c);
 
 			lora.rx_index = 0;
 			lora.message = 1;
@@ -53,6 +53,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	}
 	HAL_UART_Receive_IT(&huart2, &lora.rx_data, 1);
 }
+
+////////////////////////////////////////	INIT	////////////////////////////////////////////////////////////////////
 
 void Init_functions()
 {
@@ -64,10 +66,16 @@ void Init_functions()
 	MX_I2C1_Init();
 	MX_TIM14_Init();
 	MX_RTC_Init();
-	Struct_init(lora, callback);
+
+	l = &lora;
+	c = &callback;
+	Struct_init(l, c);
 	bmp280i();
 	CO2();
+//	MX_IWDG_Init();
 }
+
+////////////////////////////////////////	LORA SET	/////////////////////////////////////////////////////////////////
 
 void LoRa_system()
 {
@@ -82,6 +90,8 @@ void LoRa_system()
 	Save();
 }
 
+////////////////////////////////////////	WAKE	////////////////////////////////////////////////////////////////////
+
 void Wake_UP_STM()
 {
 
@@ -94,6 +104,8 @@ void Wake_UP_STM()
 		HAL_RTCEx_DeactivateWakeUpTimer(&hrtc);
 	}
 }
+
+////////////////////////////////////////	READ SENS	/////////////////////////////////////////////////////////////////
 
 void Read_sensors()
 {
@@ -108,41 +120,25 @@ void Read_sensors()
 	//CO2
 	CO2_read();
 
-	p = &lora;
-	format(temperature, humidity, bmetlak, EPY.Channel1_CO2, p);
+	format(temperature, humidity, bmetlak, EPY.Channel1_CO2, l);
 }
+
+////////////////////////////////////////	SEND	////////////////////////////////////////////////////////////////////
 
 void Send_data()
 {
-	//timer for wakeup
-	HAL_TIM_Base_Start(&htim14);
-
-	if(lora.wake_up == 0)
-	{
-		while((__HAL_TIM_GET_COUNTER(&htim14)<=10000) && (lora.wake_up == 0));
-
-		__HAL_TIM_SET_COUNTER(&htim14, 0);
-		HAL_TIM_Base_Stop(&htim14);
-
-		if(lora.wake_up == 1)
-			lora.wake_up=0;
-	}
+	//wake up ok response timeout
+	Response_timeout(l);
 
 	//join abp
-//	if(lora.joined == 0)
-	{
-		JoinAbp();
-		HAL_Delay(500);
-	}
+	JoinAbp();
+
+	Response_timeout(l);
 
 	//send
-	Tx("uncnf", &port[q], lora.f_data);
-	//switch channel
-	q++;
+	Tx("uncnf", "1", lora.f_data);
 
-	//reset channel count
-	if(q==9)
-		q=0;
+	Response_timeout(l);
 
 	//empty send buffer
 	for(int i=0; i<100; i++)
@@ -154,6 +150,8 @@ void Send_data()
 	Sleep();
 }
 
+////////////////////////////////////////	STANDBY	////////////////////////////////////////////////////////////////////
+
 void Go_to_standby()
 {
 	__HAL_PWR_CLEAR_FLAG(PWR_FLAG_WUFI);
@@ -161,17 +159,15 @@ void Go_to_standby()
 	__HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
 
 	//set to 30 min
-	if (HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 1798, RTC_WAKEUPCLOCK_CK_SPRE_16BITS) != HAL_OK)
-	{
-		Error_Handler();
-	}
+	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 1797, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
+//	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 8, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
 
 	HAL_UART_Transmit(&huart1, "STAND BY\r\n", strlen("STAND BY\r\n"), HAL_MAX_DELAY);
 
 	HAL_SuspendTick();
+
+//	HAL_IWDG_Refresh(&hiwdg);
 	HAL_PWR_EnterSTANDBYMode();
-
 }
-
 
 
