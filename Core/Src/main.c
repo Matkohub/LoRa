@@ -15,6 +15,13 @@ int main(void)
 
 //	LoRa_system(lora);
 
+//test
+//	while(1)
+//	{
+//		GetVersion();
+//		HAL_Delay(3000);
+//	}
+
 	while (1)
 	{
 		Wake_UP_STM();
@@ -134,10 +141,12 @@ void Send_data()
 	JoinAbp();
 
 	Response_timeout(l);
+	Response_timeout(l);
 
 	//send
 	Tx("uncnf", "1", lora.f_data);
 
+	Response_timeout(l);
 	Response_timeout(l);
 
 	//empty send buffer
@@ -159,8 +168,8 @@ void Go_to_standby()
 	__HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
 
 	//set to 30 min
-	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 1797, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
-//	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 8, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
+//	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 1797, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
+	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 8, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
 
 	HAL_UART_Transmit(&huart1, "STAND BY\r\n", strlen("STAND BY\r\n"), HAL_MAX_DELAY);
 

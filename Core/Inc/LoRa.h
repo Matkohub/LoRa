@@ -28,16 +28,16 @@ Callback callback, *c;
 
 //OTAA defines
 #define SET_APPKEY 		"mac set appkey 8A465B4FC57F03AA95FFCC662D9D1C44\r\n"
-#define SET_DEVEUI 		"mac set deveui BE7A00000000304B\r\n"
+#define SET_DEVEUI 		"mac set deveui BE7A00000000304A\r\n"
 #define SET_APPEUI 		"mac set appeui BE7A000000003048\r\n"
 
 //ABP defines
-#define SET_DEVADDR 	"mac set devaddr 00312E4A\r\n"
-#define SET_NWKSKEY 	"mac set nwkskey 6D752DC7F0D730C93729A232FC1AA760\r\n"
-#define SET_APPSKEY 	"mac set appskey F44E033CEABD69AF77F594B9DD17ACFC\r\n"
+#define SET_DEVADDR 	"mac set devaddr 01CB978D\r\n"
+#define SET_NWKSKEY 	"mac set nwkskey 9F24321F63C535A963705463BEF08A80\r\n"
+#define SET_APPSKEY 	"mac set appskey 3E259D02CA6F40C2071EBCA0FCEB2EAC\r\n"
 
-//#define SLEEP			"sys sleep 9000\r\n"	//test sleep
-#define SLEEP           "sys sleep 1799000\r\n"	//sleep for x miliseconds
+#define SLEEP			"sys sleep 9000\r\n"	//test sleep
+//#define SLEEP           "sys sleep 1799000\r\n"	//sleep for x miliseconds
 
 // SYS Commands
 //#define SLEEP           "sys sleep 1800000\r\n"	//sleep for x miliseconds
