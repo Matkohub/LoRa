@@ -14,7 +14,7 @@ void ftoa(float n, char* res, int afterpoint)
     // check for display option after point
     if (afterpoint != 0)
     {
-        res[i] = '.'; // add dot
+        res[i] = 'D'; // add dot
 
         // Get the value of fraction part upto given no.
         // of points after dot. The third parameter

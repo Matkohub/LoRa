@@ -7,4 +7,4 @@ void Callback_init(Callback* callback);
 void Response_callback(LoRa *lora, Callback *callback);
 void format(float temperature, float humidity, float tlak, uint32_t co2, LoRa *lora);
 void Response_timeout(LoRa *lora);
-
+void Response_timeout2(LoRa *lora);

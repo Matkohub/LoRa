@@ -1,6 +1,6 @@
 #include "Funcionality.h"
 
-char response[100];
+char response[10];
 char con[25] = "";
 
 //Send to LoRa
@@ -8,24 +8,6 @@ char* Send(char *buffer)
 {
 	HAL_UART_Transmit(&huart1, buffer, strlen(buffer), HAL_MAX_DELAY);
 	HAL_UART_Transmit(&huart2, buffer, strlen(buffer), HAL_MAX_DELAY);
-
-	//timer for message timeout
-	HAL_TIM_Base_Start(&htim14);
-
-	if(lora.message == 0)
-	{
-		//message timeout	//will resend once if timeout expires
-		while(__HAL_TIM_GET_COUNTER(&htim14)<=1000);
-
-		__HAL_TIM_SET_COUNTER(&htim14, 0);
-		HAL_TIM_Base_Stop(&htim14);
-
-		if(lora.message == 1)
-		{
-			lora.message=0;
-			return response;
-		}
-	}
 
 	lora.message = 0;
 	return response;
@@ -40,12 +22,16 @@ void Response_callback(LoRa *lora, Callback *callback)
 	if(callback->cnt == 2)
 		lora->flag = 1;
 
+	callback->cnt = 0;
+
 	//setting flag joined based on response
 	for(int i = 0; i < 8; i++)
 		if(lora->rx_buffer[i] == callback->Joined[i])
 			callback->cnt++;
 	if(callback->cnt==8)
 		lora->flag = 1;
+
+	callback->cnt = 0;
 
 	//setting flag if the message is sent
 	for(int i = 0; i < 9; i++)
@@ -83,31 +69,31 @@ void Callback_init(Callback *callback)
 //make format for sending data
 void format(float temperature, float humidity, float tlak, uint32_t co2, LoRa *lora)
 {
-	ftoa(temperature, con, 0);
+	ftoa(temperature, con, 2);
 
 	strncat(lora->f_data, "A", 1);
 	strncat(lora->f_data, "1", 1);
 	strncat(lora->f_data, "B", 1);
 	strncat(lora->f_data, con, strlen(con));
 
-	ftoa(humidity, con, 0);
+	ftoa(humidity, con, 2);
 
 	strncat(lora->f_data, "A", 1);
 	strncat(lora->f_data, "2", 1);
 	strncat(lora->f_data, "B", 1);
 	strncat(lora->f_data, con, strlen(con));
 
-	ftoa(tlak, con, 0);
+	ftoa(tlak, con, 2);
 
 	strncat(lora->f_data, "A", 1);
 	strncat(lora->f_data, "3", 1);
 	strncat(lora->f_data, "B", 1);
 	strncat(lora->f_data, con, strlen(con));
 
-	ftoa((float)co2, con, 0);
+	ftoa((float)co2, con, 2);
 
 	strncat(lora->f_data, "A", 1);
-	strncat(lora->f_data, "3", 1);
+	strncat(lora->f_data, "4", 1);
 	strncat(lora->f_data, "B", 1);
 	strncat(lora->f_data, con, strlen(con));
 
@@ -127,7 +113,18 @@ void Response_timeout(LoRa *lora)
 		lora->flag=0;
 }
 
+void Response_timeout2(LoRa *lora)
+{
+	HAL_TIM_Base_Start(&htim14);
 
+	while((__HAL_TIM_GET_COUNTER(&htim14)<=50000) && (lora->flag == 0));
+
+	__HAL_TIM_SET_COUNTER(&htim14, 0);
+	HAL_TIM_Base_Stop(&htim14);
+
+	if(lora->flag == 1)
+		lora->flag=0;
+}
 
 
 

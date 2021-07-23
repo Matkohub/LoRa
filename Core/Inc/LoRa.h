@@ -36,8 +36,9 @@ Callback callback, *c;
 #define SET_NWKSKEY 	"mac set nwkskey 9F24321F63C535A963705463BEF08A80\r\n"
 #define SET_APPSKEY 	"mac set appskey 3E259D02CA6F40C2071EBCA0FCEB2EAC\r\n"
 
-#define SLEEP			"sys sleep 9000\r\n"	//test sleep
-//#define SLEEP           "sys sleep 1799000\r\n"	//sleep for x miliseconds
+//#define SLEEP			"sys sleep 8000\r\n"	//test sleep
+//#define SLEEP			"sys sleep 298000\r\n"	//test sleep
+#define SLEEP           "sys sleep 1810000\r\n"	//sleep for x miliseconds
 
 // SYS Commands
 //#define SLEEP           "sys sleep 1800000\r\n"	//sleep for x miliseconds

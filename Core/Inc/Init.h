@@ -24,8 +24,6 @@ I2C_HandleTypeDef hi2c1;
 BMP280_HandleTypedef bmp280;
 TIM_HandleTypeDef htim14;
 RTC_HandleTypeDef hrtc;
-IWDG_HandleTypeDef hiwdg;
-
 
 //bmp280 variables
 float bmetlak, bmetemp, bmehum;

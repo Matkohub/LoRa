@@ -1,4 +1,5 @@
 #include "main.h"
+uint8_t cnt=0;
 
 //retarded si
 float temperature, humidity;
@@ -13,21 +14,17 @@ int main(void)
 	//start receive interrupt
 	HAL_UART_Receive_IT(&huart2, &lora.rx_data, 1);
 
+//Change parameters
 //	LoRa_system(lora);
-
-//test
-//	while(1)
-//	{
-//		GetVersion();
-//		HAL_Delay(3000);
-//	}
 
 	while (1)
 	{
-		Wake_UP_STM();
+//		Wake_UP_STM();
 		Read_sensors();
-		Send_data();
-		Go_to_standby();
+//		Send_data();
+//		Go_to_standby();
+
+		HAL_Delay(5000);
 	}
 }
 
@@ -79,7 +76,8 @@ void Init_functions()
 	Struct_init(l, c);
 	bmp280i();
 	CO2();
-//	MX_IWDG_Init();
+
+	HAL_Delay(1000);
 }
 
 ////////////////////////////////////////	LORA SET	/////////////////////////////////////////////////////////////////
@@ -101,42 +99,53 @@ void LoRa_system()
 
 void Wake_UP_STM()
 {
+	//STAND BY MODE//
 
 	if( __HAL_PWR_GET_FLAG(PWR_FLAG_SB) != RESET)
 	{
 		__HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
 		HAL_UART_Transmit(&huart1, "WAKE UP\r\n", strlen("WAKE UP\r\n"), HAL_MAX_DELAY);
 
-		HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN1);
 		HAL_RTCEx_DeactivateWakeUpTimer(&hrtc);
+		__HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
 	}
+
+	Response_timeout2(l);
+
+
 }
 
 ////////////////////////////////////////	READ SENS	/////////////////////////////////////////////////////////////////
 
 void Read_sensors()
-{
+{cnt++;
 	//bmp is stupid so needs to read twice
+//	bmp280_read_float(&bmp280, &bmetemp, &bmetlak, &bmehum);
+//	HAL_Delay(100);
 	bmp280_read_float(&bmp280, &bmetemp, &bmetlak, &bmehum);
 	HAL_Delay(100);
-	bmp280_read_float(&bmp280, &bmetemp, &bmetlak, &bmehum);
 
 	//Si
 	r_both_Si7021(phum, ptemp);
+	HAL_Delay(100);
 
 	//CO2
 	CO2_read();
 
 	format(temperature, humidity, bmetlak, EPY.Channel1_CO2, l);
+
+
+	HAL_UART_Transmit(&huart1, lora.f_data, strlen(lora.f_data), HAL_MAX_DELAY);
+	HAL_UART_Transmit(&huart1, "\r\n", strlen("\r\n"), HAL_MAX_DELAY);
+	//empty send buffer
+	for(int i=0; i<100; i++)
+		lora.f_data[i] = 0;
 }
 
 ////////////////////////////////////////	SEND	////////////////////////////////////////////////////////////////////
 
 void Send_data()
 {
-	//wake up ok response timeout
-	Response_timeout(l);
-
 	//join abp
 	JoinAbp();
 
@@ -153,30 +162,33 @@ void Send_data()
 	for(int i=0; i<100; i++)
 		lora.f_data[i] = 0;
 
-	HAL_Delay(5000);
-
-	//go to sleep for 30 min
-	Sleep();
+	HAL_Delay(100);
 }
 
 ////////////////////////////////////////	STANDBY	////////////////////////////////////////////////////////////////////
 
 void Go_to_standby()
 {
+//	Lora to sleep for 30 min
+	Sleep();
+
+//	STAND BY MODE//
+
 	__HAL_PWR_CLEAR_FLAG(PWR_FLAG_WUFI);
 	__HAL_PWR_CLEAR_FLAG(PWR_FLAG_WUF);
 	__HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
 
 	//set to 30 min
-//	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 1797, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
-	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 8, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
+	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 1759, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
+//	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 290, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
+//	HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 5, RTC_WAKEUPCLOCK_CK_SPRE_16BITS);
 
 	HAL_UART_Transmit(&huart1, "STAND BY\r\n", strlen("STAND BY\r\n"), HAL_MAX_DELAY);
 
 	HAL_SuspendTick();
 
-//	HAL_IWDG_Refresh(&hiwdg);
 	HAL_PWR_EnterSTANDBYMode();
+
 }
 
 
